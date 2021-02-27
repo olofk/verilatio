@@ -55,6 +55,8 @@ TODO: What about slightly more complex I/O e.g. RGB leds? How do we handle 7-seg
 
 TODO: Several use cases slot in somewhat with VirtIO. Maybe develop VirtIO<->verilatio bridges for e.g. ethernet, block devices, console
 
+TODO: How to handle non-buffered data streams like UART? One messages for each character? Do some clever queueing? Treat as binary data or text?
+
 # Protocol
 
 led
@@ -97,3 +99,10 @@ Argument : bool
 
 dir: to sim
 
+memwrite
+--------
+Write an Intel Hex file to memory. Note that websocket maximum message size is 65536 bytes, so larger programs will need to be split up into chunks
+
+Argument : string
+
+dir: to sim
