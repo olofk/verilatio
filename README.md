@@ -59,6 +59,8 @@ TODO: How to handle non-buffered data streams like UART? One messages for each c
 
 TODO: Transfering large chunks of data such as ihex file for programming or maybe a frame from a graphics output might be split across several messages (frames?) Need to investigate if this is a problem
 
+TODO: Allow LED brightness to be a float to emulate PWM'd LEDs
+
 # Protocol
 
 led
