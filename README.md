@@ -57,6 +57,8 @@ TODO: Several use cases slot in somewhat with VirtIO. Maybe develop VirtIO<->ver
 
 TODO: How to handle non-buffered data streams like UART? One messages for each character? Do some clever queueing? Treat as binary data or text?
 
+TODO: Transfering large chunks of data such as ihex file for programming or maybe a frame from a graphics output might be split across several messages (frames?) Need to investigate if this is a problem
+
 # Protocol
 
 led
@@ -101,7 +103,7 @@ dir: to sim
 
 memwrite
 --------
-Write an Intel Hex file to memory. Note that websocket maximum message size is 65536 bytes, so larger programs will need to be split up into chunks
+Write an Intel Hex file to memory.
 
 Argument : string
 
