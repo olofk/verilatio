@@ -128,6 +128,13 @@ memwrite
 --------
 Write an Intel Hex file to memory.
 
-Argument : string
+Argument : dict of name/value (string/string) pairs where name refers to the identifier of the memory to be programmed (in case there are multiple) and the value is the ihex data
 
 dir: to sim
+
+```json
+/* Write a ihex file (containing a RISC-V LED blinker) to RAM */
+{"memwrite" :
+  {"ram" : ":1000000037050040130505003703010023005500A4\n:1000100093C21200B373000093831300E31E73FEB8\n:040020006FF0DFFEA0\n:00000001FF"}
+}
+```
