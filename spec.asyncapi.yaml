@@ -1,0 +1,70 @@
+asyncapi: 2.0.0
+info:
+  title: Verilatio Protocol
+  version: 0.1.0
+  description: Describes a websocket simulator driver protocol. Sort of like a cosimulation RPC layer.
+channels:
+  /:
+    publish:
+      description: Command sent from client to simulator.
+      message:
+        $ref: '#/components/messages/ToSimulator'
+    subscribe:
+      description: The current state of the simulator sent to the client.
+      message:
+        $ref: '#/components/messages/FromSimulator'
+components:
+  messages:
+    ToSimulator:
+      payload:
+        type: object
+        properties:
+          simulatorAction:
+            enum: ["none", "step", "run", "pause", "restart"]
+            example: "step"
+            description: controls the simulators running state.
+          subscribeTo:
+            type: array
+            items:
+              type: string
+              description: the signal identifier
+              example: "led_0"
+            description: subscribes to changes in signal values. This only needs to be sent ONCE for the duration of the websocket session.
+          setValue:
+            description: sets the values of a set of signals.
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: the signal identifier
+                  example: "sw1"
+                value:
+                  type: number
+    FromSimulator:
+      payload:
+        type: object
+        properties:
+          simulatorState:
+            enum: ["initial", "running", "paused", "finished"]
+          time:
+            type: object
+            required: ["value"]
+            properties:
+              value:
+                type: number
+              unit:
+                enum: ["ticks","ps","ns","us","ms","s"]
+          valueChanges:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: the signal identifier
+                  example: "led_0"
+                value:
+                  type: number
+            
