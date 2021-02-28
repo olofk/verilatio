@@ -10,7 +10,14 @@ channels:
       message:
         $ref: '#/components/messages/ToSimulator'
     subscribe:
-      description: The current state of the simulator sent to the client.
+      description: |
+        The current state of the simulator sent to the client.
+        This may be published by the simulator at any time, but it
+        _must_ be published under the following circumstances:
+        
+        1. When the websocket connection is established (initial simulator state and time)
+        2. When a command with subscribe is sent (initial signal value)
+        3. When the simulation completes or unexpectedly stops
       message:
         $ref: '#/components/messages/FromSimulator'
 components:
@@ -67,4 +74,11 @@ components:
                   example: "led_0"
                 value:
                   type: number
-            
+          errors:
+            type: array
+            items:
+              type: object
+              properties:
+                message:
+                  type: string
+              required: ["message"]
