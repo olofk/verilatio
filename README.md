@@ -43,15 +43,26 @@ Messages from client to simulator does not contain timestamps.
 
 Main websocket channel is text. Binary high-bandwidth data (e.g. ethernet and video) are sent over separate sockets as binary data. Client can ask simulator which additional sockets are used.
 
+If several commands of the same type is sent in the same message, the result is undefined since we can't guarantee ordering in the json struct. Example
+
+```json
+/* VCD on and off at the same time. Undefined outcome */
+{
+"time" : 12345,
+"vcd" : false,
+"vcd" : true
+}
+```
+
 TODO : This covers several classes of devices. Would be good to mimic a strcuture here (like the Linux kernel) to avoid having to come up with a device classification from scratch.
 
 TODO: Figure out corner cases and error handling
 
 TODO: Is it necessary to have different sockets for high-bandwidth data. No clue how this works in practice
 
-TODO: Should we be specific about I/O like LEDs, buttons and switches or just lump the together as gpio? I do think that's better, really.
+TODO: PWM for LEDs. Do we send each I/O change (lots of messages) or calculate a PWM value as a float in the sim (how do we decide when to send a new value? First case does not need special protocol handling so lets start with that
 
-TODO: What about slightly more complex I/O e.g. RGB leds? How do we handle 7-segment displays?
+TODO: How do we handle 7-segment displays? Just a series of gpio to begin with to make it easy
 
 TODO: Several use cases slot in somewhat with VirtIO. Maybe develop VirtIO<->verilatio bridges for e.g. ethernet, block devices, console
 
@@ -59,25 +70,35 @@ TODO: How to handle non-buffered data streams like UART? One messages for each c
 
 TODO: Transfering large chunks of data such as ihex file for programming or maybe a frame from a graphics output might be split across several messages (frames?) Need to investigate if this is a problem
 
-TODO: Allow LED brightness to be a float to emulate PWM'd LEDs
+TODO: Should simulator send message with all GPIO state upon connecting? That would both help discover available I/O and sync up both sides
 
 # Protocol
 
-led
----
-Turn LEDs on and off
+gpio
+----
+Turn GPIOs on and off. GPIO can be switches, LEDs (RGB LEDs would have three pins associated with them), buttons, 7-segment displays (each segment gets its own gpio pin)
 
 Argument : dict of name/value (string/bool) pairs
 
-dir: to sim
+dir: both
 
-switch
-------
-Turn switches on and off
+Example:
+```json
+/* To simulator */
+{
+   "gpio":{
+      "SW0":true,
+      "BTN4":false
+   }
+}
 
-Argument : dict of name/value (string/bool) pairs
-
-dir: from sim
+/* From simulator */
+{
+   "gpio":{
+      "LED2":true,
+   }
+}
+```
 
 vcd
 ---
