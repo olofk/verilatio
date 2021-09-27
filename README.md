@@ -1,3 +1,7 @@
+This project is deprecated and replaced by https://github.com/olofk/vidbo
+
+This repository will be removed once the relevant information has been migrated
+
 # verilatio
 A protocol for communicating with HDL simulations over websockets
 
